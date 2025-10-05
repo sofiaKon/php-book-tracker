@@ -16,7 +16,7 @@ The project focuses on **queries and reports** for the `bookinsert` table. PHP i
 ## Requirements
 - XAMPP (PHP 8.x + MariaDB/MySQL), phpMyAdmin.
 - The `bookinsert` table already exists and is being populated.  
-  > If your DB name differs from the examples, just substitute your own.
+
 
 ## Quick start
 1. The scripts use a connection like:
