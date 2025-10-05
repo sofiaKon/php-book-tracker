@@ -18,10 +18,18 @@
     }
 
     $res = $db->query("
-  SELECT id, reader, name, title, author, genre, pages, finished_date, added_at
-  FROM bookinsert
-  ORDER BY added_at DESC, id DESC
-");
+        SELECT
+            rl.log_id            AS id,
+            rl.reader_name       AS reader_name,
+            b.title,
+            b.author,
+            b.genre,
+            COALESCE(rl.pages_read, b.pages) AS pages,
+            rl.finished_date
+        FROM reading_log rl
+        JOIN books b ON b.book_id = rl.book_id
+        ORDER BY rl.finished_date DESC, rl.log_id DESC
+    ");
 
     echo "<h1>Book list</h1>\n";
     echo "<table>\n";
@@ -32,21 +40,20 @@
         <th>Genre</th>
         <th>Pages</th>
         <th>Finished Date</th>
-        <th>Added at</th>
       </tr>\n";
 
     while ($row = $res->fetch_assoc()) {
 
-        $reader = $row['reader'] ?? $row['name'] ?? '';
+        $reader_name = $row['reader_name'];
+
 
         echo "<tr>";
-        echo "<td>" . htmlspecialchars($reader, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
-        echo "<td>" . htmlspecialchars($row['title'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
-        echo "<td>" . htmlspecialchars($row['author'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
-        echo "<td>" . htmlspecialchars($row['genre'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
+        echo "<td>" . htmlspecialchars($row['reader_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
+        echo "<td>" . htmlspecialchars($row['title'],       ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
+        echo "<td>" . htmlspecialchars($row['author'],      ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
+        echo "<td>" . htmlspecialchars($row['genre'],       ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
         echo "<td>" . (isset($row['pages']) ? (int)$row['pages'] : '') . "</td>";
-        echo "<td>" . htmlspecialchars($row['finished_date'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
-        echo "<td>" . htmlspecialchars($row['added_at'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
+        echo "<td>" . htmlspecialchars($row['finished_date'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</td>";
         echo "</tr>\n";
     }
 

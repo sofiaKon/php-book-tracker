@@ -46,8 +46,6 @@ Genre breakdown — distribution by genres (the genre field is stored as CSV).
 Genres are stored as a comma-separated string (e.g., Fantasy, Romance).
 This is sufficient for simple reports.
 
-Duplicate protection is implemented on the client side (JS).
-If desired, you can enable DB-level uniqueness via *_norm — not required to run.
 
 ## Features 
 
@@ -71,21 +69,30 @@ JavaScript / Chart.js
 CREATE DATABASE booktracker CHARACTER SET utf8mb4;
 USE booktracker;
 
-CREATE TABLE bookinsert (
-  id            INT AUTO_INCREMENT PRIMARY KEY,
-  reader        VARCHAR(50)  NOT NULL,
-  title         VARCHAR(100) NOT NULL,
-  author        VARCHAR(100) NULL,
-  pages         SMALLINT UNSIGNED NOT NULL,
-  finished_date DATE         NULL,
-  added_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  genre         VARCHAR(255) NULL,
-  title_norm    VARCHAR(255) GENERATED ALWAYS AS (LOWER(title))  STORED NOT NULL,
-  reader_norm   VARCHAR(255) GENERATED ALWAYS AS (LOWER(reader)) STORED NOT NULL,
-  UNIQUE KEY uniq_title_norm (title_norm),
-  UNIQUE KEY uniq_reader_norm (reader_norm)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE books (
+  book_id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  author VARCHAR(255) NOT NULL,
+  genre VARCHAR(100) NOT NULL,
+  pages INT NOT NULL,
+  UNIQUE KEY uk_books_title (title),
+   KEY idx_books_genre (genre)
+) ENGINE=InnoDB;
 
 
-Проект создан как учебный и развиваемый.
+CREATE TABLE reading_log (
+  log_id INT AUTO_INCREMENT PRIMARY KEY,
+  reader_name VARCHAR(100) NOT NULL,
+  book_id INT NOT NULL,
+  finished_date DATE NOT NULL,
+  CONSTRAINT fk_log_book FOREIGN KEY (book_id) REFERENCES books(book_id)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  UNIQUE KEY uq_reader_book_date (reader_name, book_id, finished_date), -- защита от точного дубля
+  KEY idx_log_reader (reader_name),
+  KEY idx_log_date (finished_date)
+) ENGINE=InnoDB;
+
+
+
+
 # php-book-tracker
