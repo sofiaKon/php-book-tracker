@@ -1,7 +1,5 @@
 <p align="right">🌐 Languages: <b>English</b> · <a href="README_ko.md">한국어</a></p>
 
-# Book Tracker — PHP/SQL Analitics
-
 # Book Tracker — PHP/SQL Analytics
 
 The project focuses on **queries and reports** for the `bookinsert` table. PHP is used as a lightweight layer for input/output and Chart.js charts.
