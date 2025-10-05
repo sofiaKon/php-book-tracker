@@ -1,3 +1,5 @@
+<p align="right">🌐 언어: <a href="README.md">English</a> · <b>한국어</b></p>
+
 # Book Tracker — PHP/SQL 애널리틱스
 
 이 프로젝트의 핵심은 `bookinsert` 테이블을 대상으로 한 **SQL 쿼리와 리포트**입니다.  

@@ -2,72 +2,71 @@
 
 # Book Tracker — PHP/SQL Analitics
 
-Фокус проекта — **запросы и отчёты** по таблице `bookinsert`. PHP используется как минимальный слой для ввода/вывода и графиков на Chart.js.
+# Book Tracker — PHP/SQL Analytics
 
-## Состав репозитория
-- `index.php` — форма добавления книги.
-- `output_list.php` — список книг (простая таблица).
-- `book_edit.php` — редактирование существующей записи. (В разработке)
-- `stats.php` — страница с графиками (Chart.js), строит отчёты напрямую из БД.
-- `check.js` — клиентская валидация формы.
-- `analytics.sql` — набор базовых аналитических SQL (+ пары view).
-- `README.md` — этот файл.
+The project focuses on **queries and reports** for the `bookinsert` table. PHP is used as a lightweight layer for input/output and Chart.js charts.
 
-## Требования
+## Repository contents
+- `index.php` — book submission form.
+- `output_list.php` — book list (simple table).
+- `book_edit.php` — edit an existing record. *(In progress)*
+- `stats.php` — charts page (Chart.js), builds reports directly from the DB.
+- `check.js` — client-side input validation.
+- `analytics.sql` — a set of basic analytical SQL queries (+ a couple of views).
+- `README.md` — this file.
+
+## Requirements
 - XAMPP (PHP 8.x + MariaDB/MySQL), phpMyAdmin.
-- Таблица `bookinsert` уже существует и наполняется.
-  > Если имя БД отличается от примеров — просто подставь своё.
+- The `bookinsert` table already exists and is being populated.  
+  > If your DB name differs from the examples, just substitute your own.
 
-## Быстрый старт
-1. В файлах используется подключение вида:
+## Quick start
+1. The scripts use a connection like:
    ```php
    new mysqli('localhost', 'root', '1234', 'booktracker');
 
-2. Импортируй аналитические запросы.
-Открой phpMyAdmin → выбери свою БД → Import → файл analytics.sql → Go.
-Альтернатива (CLI): "C:\xampp\mysql\bin\mysql.exe" -u root -p your_db < "C:\Path\analytics.sql"
+2. Import the analytical queries.
+Open phpMyAdmin → select your DB → Import → choose analytics.sql → Go.
+Alternative (CLI):
+"C:\xampp\mysql\bin\mysql.exe" -u root -p your_db < "C:\Path\analytics.sql"
 
-3. Проверь ввод/вывод.
-http://localhost/index.php — добавление записей
+3. Verify input/output.
 
-http://localhost/output_list.php — список
+http://localhost/index.php — add records
 
-http://localhost/stats.php — графики
+http://localhost/output_list.php — list
 
-## Что показывается в stats.php (В разработке)
+http://localhost/stats.php — charts
 
-Monthly activity — книги/страницы/среднее по месяцам.
+## What stats.php shows (In progress)
+Monthly activity — books/pages/average per month.
+Top authors — top authors by number of books.
+Genre breakdown — distribution by genres (the genre field is stored as CSV).
 
-Top authors — топ авторов по числу книг.
+## Data & assumptions
 
-Genre breakdown — разбивка по жанрам (поле genre хранится как CSV).
+Genres are stored as a comma-separated string (e.g., Fantasy, Romance).
+This is sufficient for simple reports.
 
-## О данных и допущениях
+Duplicate protection is implemented on the client side (JS).
+If desired, you can enable DB-level uniqueness via *_norm — not required to run.
 
-Жанры сохраняются строкой через запятую (напр. Fantasy, Romance).
-Для простых отчётов этого достаточно.
+## Features 
 
-Защита от дублей реализуется клиентской проверкой (JS).
-При желании можно включить уникальность в БД (*_norm) — не обязательно для запуска.
+-- Adding books with details:
+Reader name
+Book title
+Author
+Genre
+Page count
+Finished date
 
-## Возможности
+## Tech stack
+PHP 8.x
+MySQL (via XAMPP)
+phpMyAdmin
 
-  Добавление книг с деталями:
-  - Имя читателя
-  - Название книги
-  - Автор
-  - Жанр
-  - Количество страниц
-  - Дата завершения
-
- ##  Стек технологий
-
-- PHP 8.x
-- MySQL (через XAMPP)
-- phpMyAdmin
-- JavaScript / Chart.js
-
-
+JavaScript / Chart.js
 ##  Структура базы данных
 
 ```sql
