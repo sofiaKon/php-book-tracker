@@ -93,11 +93,6 @@ CREATE TABLE reading_log (
   KEY idx_log_date (finished_date)
 ) ENGINE=InnoDB;
 
-## 분석
-
-![Monthly activity](assets/analytics/monthly.png)
-![Top authors](assets/analytics/authors.png)
-![Genre breakdown](assets/analytics/genres.png)
 
 
 ## 문제 해결(간단)
