@@ -2,30 +2,22 @@
 
 # Book Tracker — PHP/SQL 애널리틱스
 
-이 프로젝트의 핵심은 `bookinsert` 테이블을 대상으로 한 **SQL 쿼리와 리포트**입니다.  
-PHP는 입력/출력과 Chart.js 시각화를 위한 **얇은 레이어**로만 사용됩니다.
+프로젝트는 booktracker 데이터베이스에 대한 쿼리와 보고서에 중점을 둡니다. PHP는 입출력(I/O)과 Chart.js 차트를 위한 경량 레이어로 사용됩니다.
 
-> 영어 README가 필요하면 `README.md`를, 러시아어는 `README_RU.md`를 참고하세요.
-
----
 
 ## 리포지토리 구성
 - `index.php` — 도서 입력 폼
 - `output_list.php` — 도서 목록(기본 테이블)
-- `book_edit.php` — 기존 레코드 수정 *(작업 중)*
 - `stats.php` — 차트 페이지(Chart.js, DB에서 직접 조회)
 - `check.js` — 폼 클라이언트 검증
 - `analytics.sql` — 기본 분석용 SQL 쿼리(뷰 포함)
 - `README.md` / `README_ko.md` — 문서
+- `create_database.sql` — 데이터베이스를 생성하고 초기 데이터를 채우는 스크립트입니다.
 
----
 
 ## 요구 사항
 - XAMPP(php 8.x + MariaDB/MySQL), phpMyAdmin
-- `bookinsert` 테이블이 이미 존재하고 데이터가 입력되고 있어야 합니다  
-  > 예시의 DB 이름이 다르면 코드의 DB 이름만 바꿔 주세요.
 
----
 
 ## 빠른 시작
 
@@ -71,7 +63,7 @@ MySQL/MariaDB(XAMPP)
 phpMyAdmin
 JavaScript / Chart.js
 
- -- 데이터베이스 구조 (예시) --
+## 데이터베이스 구조
  참고: MariaDB 버전에 따라 생성 열(GENERATED COLUMN) 제약이 다릅니다.
 생성 열에 NOT NULL을 허용하지 않는 버전(예: MariaDB 10.4.x)이 있으니, 해당 경우 NOT NULL을 빼고 사용하세요.
 
@@ -83,7 +75,7 @@ CREATE TABLE books (
   title VARCHAR(255) NOT NULL,
   author VARCHAR(255) NOT NULL,
   genre VARCHAR(100) NOT NULL,
-  pages INT NOT NULL,
+  read_pages INT NOT NULL,
   UNIQUE KEY uk_books_title (title),
    KEY idx_books_genre (genre)
 ) ENGINE=InnoDB;
@@ -96,12 +88,10 @@ CREATE TABLE reading_log (
   finished_date DATE NOT NULL,
   CONSTRAINT fk_log_book FOREIGN KEY (book_id) REFERENCES books(book_id)
     ON UPDATE CASCADE ON DELETE RESTRICT,
-  UNIQUE KEY uq_reader_book_date (reader_name, book_id, finished_date), -- защита от точного дубля
+  UNIQUE KEY uq_reader_book_date (reader_name, book_id, finished_date), 
   KEY idx_log_reader (reader_name),
   KEY idx_log_date (finished_date)
 ) ENGINE=InnoDB;
-
-
 
 
 ## 문제 해결(간단)

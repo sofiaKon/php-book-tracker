@@ -1,27 +1,29 @@
 <?php
-// === DB connect (исправь пароль и имя БД под себя) ===
+
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$db = new mysqli('localhost', 'root', '1234', 'sofiatest'); // <-- поменяй при необходимости
+$db = new mysqli('localhost', 'root', '1234', 'booktracker');
 $db->set_charset('utf8mb4');
 
 // --- 1) Monthly activity: books + pages + avg ---
+
+
 $qMonthly = "
-  SELECT
-    DATE_FORMAT(finished_date, '%Y-%m') AS ym,
-    COUNT(*)                            AS books,
-    COALESCE(SUM(pages), 0)             AS pages_sum,
-    ROUND(AVG(pages), 1)                AS pages_avg
-  FROM bookinsert
-  WHERE finished_date IS NOT NULL
-  GROUP BY ym
-  ORDER BY ym
-";
+    SELECT
+DATE_FORMAT(rl.finished_date, '%Y-%m') AS ym,
+COUNT(*)                                AS sessions,     
+COALESCE(SUM(rl.pages_read), 0)         AS pages_sum,    
+ROUND(AVG(rl.pages_read), 1)            AS pages_avg
+FROM reading_log rl
+GROUP BY ym
+ORDER BY ym;
+   ";
+
 $monthly = $db->query($qMonthly)->fetch_all(MYSQLI_ASSOC);
 
 // --- 2) Top authors (by books) ---
 $qAuthors = "
   SELECT author, COUNT(*) AS books
-  FROM bookinsert
+  FROM books
   WHERE COALESCE(author,'') <> ''
   GROUP BY author
   ORDER BY books DESC, author
@@ -30,10 +32,10 @@ $qAuthors = "
 $topAuthors = $db->query($qAuthors)->fetch_all(MYSQLI_ASSOC);
 
 // --- 3) Genre breakdown (CSV в поле genre) ---
-$genres = ['Fantasy', 'Romance', 'Thriller', 'Science fiction', 'Horror', 'Other']; // значения, которые у тебя пишутся в БД
+$genres = ['Fantasy', 'Romance', 'Thriller', 'Science fiction', 'Horror', 'Other'];
 $counter = array_fill_keys($genres, 0);
 
-$res = $db->query("SELECT genre FROM bookinsert WHERE COALESCE(TRIM(genre),'') <> ''");
+$res = $db->query("SELECT genre FROM books WHERE COALESCE(TRIM(genre),'') <> ''");
 while ($r = $res->fetch_assoc()) {
     $parts = array_map('trim', explode(',', $r['genre']));
     foreach ($parts as $p) {
@@ -47,7 +49,7 @@ while ($r = $res->fetch_assoc()) {
     }
 }
 
-// --- Подготовка массивов для JS ---
+
 $monthly_labels = array_column($monthly, 'ym');
 $monthly_books  = array_map('intval',  array_column($monthly, 'books'));
 $monthly_pages  = array_map('intval',  array_column($monthly, 'pages_sum'));

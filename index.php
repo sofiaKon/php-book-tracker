@@ -11,7 +11,7 @@
     <body>
         <script type="text/javascript" src="check.js"></script>
 
-        <form name="bookinsert" method="post" action="" onsubmit="return joinCheck()">
+        <form name="reading_log" method="post" action="" onsubmit="return joinCheck()">
 
             Reader name: <input type="text" size="50" name="reader"><br><br>
             Book title: <input type="text" size="50" name="title"><br><br>
@@ -25,7 +25,7 @@
             <label><input type="checkbox" name="genre[]" value="Horror"> Horror</label><br>
             <label><input type="checkbox" name="genre[]" value="Other"> Other</label><br><br>
 
-            Number of pages: <input type="number" name="pages"><br><br>
+            Number of pages you have read: <input type="number" name="pages"><br><br>
             Finished date: <input type="date" name="finished_date"><br><br>
 
             <input type="submit" value="Submit"><br><br>
@@ -48,7 +48,7 @@
             $con->set_charset("utf8mb4");
 
 
-            $chk = $con->prepare("SELECT id FROM bookinsert WHERE LOWER(title)=LOWER(?) LIMIT 1");
+            $chk = $con->prepare("SELECT id FROM reading_log WHERE LOWER(title)=LOWER(?) LIMIT 1");
             $chk->bind_param("s", $title);
             $chk->execute();
             if ($chk->get_result()->fetch_assoc()) {
