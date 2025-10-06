@@ -112,5 +112,9 @@ SET @book_id := LAST_INSERT_ID();
 INSERT INTO reading_log (reader_name, book_id, pages_read, finished_date)
 VALUES ('LunaFox', @book_id, 310, '2024-12-12');
 
+ALTER TABLE reading_log
+  ADD COLUMN pages_read INT NOT NULL DEFAULT 0 AFTER book_id;
+
+
 
 

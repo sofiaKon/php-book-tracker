@@ -75,7 +75,7 @@ CREATE TABLE books (
   title VARCHAR(255) NOT NULL,
   author VARCHAR(255) NOT NULL,
   genre VARCHAR(100) NOT NULL,
-  read_pages INT NOT NULL,
+  pages INT NOT NULL,
   UNIQUE KEY uk_books_title (title),
    KEY idx_books_genre (genre)
 ) ENGINE=InnoDB;
@@ -85,6 +85,7 @@ CREATE TABLE reading_log (
   log_id INT AUTO_INCREMENT PRIMARY KEY,
   reader_name VARCHAR(100) NOT NULL,
   book_id INT NOT NULL,
+  pages_read INT NOT NULL,
   finished_date DATE NOT NULL,
   CONSTRAINT fk_log_book FOREIGN KEY (book_id) REFERENCES books(book_id)
     ON UPDATE CASCADE ON DELETE RESTRICT,
