@@ -1,14 +1,14 @@
 function joinCheck() {
 	// проверяем, заполнено ли поле reader
-	if (document.bookinsert.reader.value.trim().length === 0) {
+	if (document.log.reader.value.trim().length === 0) {
 		alert("Please enter your name.");
-		document.bookinsert.reader.focus();
+		document.log.reader.focus();
 		return false;
 	}
 
-	if (document.bookinsert.title.value.trim().length == 0) {
+	if (document.log.title.value.trim().length == 0) {
 		alert("Please enter the title of the book.");
-		document.bookinsert.title.focus();
+		document.log.title.focus();
 		return false;
 	}
 	success();
